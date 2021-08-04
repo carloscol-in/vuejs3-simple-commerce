@@ -33,14 +33,15 @@ app.component("product", {
                 <span>Discount Code:</span>
                 <input type="text" placeholder="Write your CODE" @keyup.enter="applyDiscount($event)">
             </div>
-            <button :disabled="product.stock === 0" @click="addToCart()">Add to cart</button>
+            <button :disabled="product.stock === 0" @click="sendToCart()">Add to cart</button>
         </section>
     `,
     props: ["product"],
+    emits: ["send-to-cart"],
     data() {
         return {
             active_image: 0,
-            discountCodes: ["PLATZI20", "IOSAMUEL"]
+            discount_codes: ["PLATZI20", "IOSAMUEL"]
         };
     },
     methods: {
@@ -51,14 +52,8 @@ app.component("product", {
                 this.discount_codes.splice(discount_code_index, 1);
             }
         },
-        addToCart() {
-            const prod_index = this.cart.findIndex(prod => prod.name === this.product.name);
-            if(prod_index >= 0){
-                this.cart[prod_index].quantity += 1;
-            } else {
-                this.cart.push(this.product);
-            }
-            this.product.stock -= 1;
+        sendToCart() {
+            this.$emit("send-to-cart", this.product);
         }
     }
 });
