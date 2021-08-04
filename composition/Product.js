@@ -1,5 +1,5 @@
 app.component("product", {
-    template: `
+    template: /* vue-html */ `
         <section class="product">
             <div class="product__thumbnails">
                 <div
@@ -17,12 +17,7 @@ app.component("product", {
         </section>
         <section class="description">
             <h4>{{ product.name.toUpperCase() }}</h4>
-            <span class="badge new" v-if="product.new">
-                New
-            </span>
-            <span class="badge offer" v-if="product.offer">
-                Discount
-            </span>
+            <badge :product="product" />
             <p class="description__status" v-if="product.stock === 3">Quedan pocas unidades!</p>
             <p class="description__status" v-else-if="product.stock === 2">Quedan muy poquitas unidades!</p>
             <p class="description__price">$ {{ new Intl.NumberFormat("es-MX").format(product.price) }}</p>

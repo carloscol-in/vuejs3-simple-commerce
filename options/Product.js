@@ -36,27 +36,9 @@ app.component("product", {
             <button :disabled="product.stock === 0" @click="addToCart()">Add to cart</button>
         </section>
     `,
+    props: ["product"],
     data() {
         return {
-            product: {
-                name: "Camera",
-                price: 450_000,
-                stock: 4,
-                content: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reprehenderit aut explicabo labore, error quibusdam atque maxime soluta excepturi debitis ex nostrum id sit minima perspiciatis nulla odio? Obcaecati, magni nesciunt.`,
-                images: [
-                    {
-                        image: "./images/camara.jpg",
-                        thumbnail: "./images/camara-thumb.jpg",
-                    },
-                    {
-                        image: "./images/camara-2.jpg",
-                        thumbnail: "./images/camara-2-thumb.jpg",
-                    }
-                ],
-                new: true,
-                offer: true,
-                quantity: 1
-            },
             active_image: 0,
             discountCodes: ["PLATZI20", "IOSAMUEL"]
         };
