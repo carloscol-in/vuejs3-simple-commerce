@@ -26,8 +26,10 @@
             </div>
         </header>
 
+        <input type="text" v-model="search_filter">
+
         <main>
-            <product v-for="product in products" :key="product.name" :product="product" @send-to-cart="addToCart($event)"></product>
+            <product v-for="product in filtered_products" :key="product.name" :product="product" @send-to-cart="addToCart($event)"></product>
         </main>
     </div>
 
@@ -38,65 +40,13 @@
         const app = createApp({
             setup() {
 
-                const products = ref([
-                    {
-                        name: "Camera",
-                        price: 450_000,
-                        stock: 4,
-                        content: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reprehenderit aut explicabo labore, error quibusdam atque maxime soluta excepturi debitis ex nostrum id sit minima perspiciatis nulla odio? Obcaecati, magni nesciunt.`,
-                        images: [
-                            {
-                                image: "./images/camara.jpg",
-                                thumbnail: "./images/camara-thumb.jpg",
-                            },
-                            {
-                                image: "./images/camara-2.jpg",
-                                thumbnail: "./images/camara-2-thumb.jpg",
-                            }
-                        ],
-                        offer: true,
-                        new: true,
-                        quantity: 1
-                    },
-                    {
-                        name: "Camera PL",
-                        price: 300_000,
-                        stock: 10,
-                        content: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reprehenderit aut explicabo labore, error quibusdam atque maxime soluta excepturi debitis ex nostrum id sit minima perspiciatis nulla odio? Obcaecati, magni nesciunt.`,
-                        images: [
-                            {
-                                image: "./images/camara.jpg",
-                                thumbnail: "./images/camara-thumb.jpg",
-                            },
-                            {
-                                image: "./images/camara-2.jpg",
-                                thumbnail: "./images/camara-2-thumb.jpg",
-                            }
-                        ],
-                        offer: false,
-                        new: true,
-                        quantity: 1
-                    },
-                    {
-                        name: "Camera XL",
-                        price: 650_000,
-                        stock: 6,
-                        content: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reprehenderit aut explicabo labore, error quibusdam atque maxime soluta excepturi debitis ex nostrum id sit minima perspiciatis nulla odio? Obcaecati, magni nesciunt.`,
-                        images: [
-                            {
-                                image: "./images/camara.jpg",
-                                thumbnail: "./images/camara-thumb.jpg",
-                            },
-                            {
-                                image: "./images/camara-2.jpg",
-                                thumbnail: "./images/camara-2-thumb.jpg",
-                            }
-                        ],
-                        offer: true,
-                        new: true,
-                        quantity: 1
-                    }
-                ]);
+                const products = ref([]);
+
+                const search_filter = ref("");
+
+                const filtered_products = computed(() => {
+                    return products.value.filter((product) => product.name.toLowerCase().includes(search_filter.value))
+                });
 
                 const cart_state = reactive({
                     cart_open: false,
@@ -121,10 +71,19 @@
                     product.stock -= 1;
                 }
 
+                fetch("https://my-json-server.typicode.com/tastyycode/demo/products")
+                    .then(res => res.json())
+                    .then(res => {
+                        console.log(res);
+                        products.value = res;
+                    })
+
                 return {
                     products,
+                    search_filter,
                     addToCart,
                     total,
+                    filtered_products,
                     ...toRefs(cart_state),
                 };
             },
