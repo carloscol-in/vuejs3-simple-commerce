@@ -39,7 +39,13 @@ app.component("product", {
         const product_state = reactive({
             product: props.product,
             active_image: 0,
-            price_color: "rgb(104, 104, 209)",
+        });
+
+        const price_color = computed(() => {
+            if (props.product.stock <= 1) {
+                return "rgb(188, 30, 67)"
+            }
+            return "rgb(104, 104, 209)";
         });
 
         const sendToCart = () => {
@@ -61,17 +67,10 @@ app.component("product", {
                 console.log(value, old_value);
         });
 
-        watch(
-            () => product_state.product.stock,
-            (value) => {
-                if (value <= 1) {
-                    product_state.price_color = "rgb(188, 30, 67)";
-                }
-            }
-        );
-
         return {
             ...toRefs(product_state),
+
+            price_color,
 
             sendToCart,
 

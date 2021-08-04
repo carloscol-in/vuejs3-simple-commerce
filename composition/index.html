@@ -33,7 +33,7 @@
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const { createApp, ref, reactive, toRefs, watch } = Vue;
+        const { createApp, ref, reactive, toRefs, watch, computed } = Vue;
 
         const app = createApp({
             setup() {
@@ -101,8 +101,15 @@
                 const cart_state = reactive({
                     cart_open: false,
                     cart: [],
-                    total: 0,
                 })
+
+                const total = computed(() => {
+                    return cart_state.cart.reduce((prev, curr) => {
+                        const prev_price = prev.price || prev;
+                        const prev_quantity = prev.quantity || 1;
+                        return prev_price * prev_quantity + curr.price * curr.quantity;
+                    }, 0);
+                });
 
                 function addToCart(product) {
                     const prod_index = cart_state.cart.findIndex(prod => prod.name === product.name);
@@ -114,20 +121,10 @@
                     product.stock -= 1;
                 }
 
-                watch(
-                    cart_state.cart,
-                    (cart) => {
-                        cart_state.total = cart_state.cart.reduce((prev, curr) => {
-                            const prev_price = prev.price || prev;
-                            const prev_quantity = prev.quantity || 1;
-                            return prev_price * prev_quantity + curr.price * curr.quantity;
-                        }, 0);
-                    }
-                )
-
                 return {
                     products,
                     addToCart,
+                    total,
                     ...toRefs(cart_state),
                 };
             },
