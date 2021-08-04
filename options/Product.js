@@ -44,7 +44,7 @@ app.component("product", {
         return {
             active_image: 0,
             discount_codes: ["PLATZI20", "IOSAMUEL"],
-            price_color: "rgb(104, 104, 209)",
+            // price_color: "rgb(104, 104, 209)",
         };
     },
     methods: {
@@ -63,10 +63,18 @@ app.component("product", {
         active_image(value, old_value) {
             console.log(value, old_value);
         },
-        "product.stock"(stock) {
-            if(stock <= 1) {
-                this.price_color = "rgb(188, 30, 67)";
+        // "product.stock"(stock) {
+        //     if(stock <= 1) {
+        //         this.price_color = "rgb(188, 30, 67)";
+        //     }
+        // }
+    },
+    computed: {
+        price_color() {
+            if (this.product.stock <= 1){
+                return "rgb(188, 30, 67)";
             }
+            return "rgb(104, 104, 209)";
         }
     }
 });

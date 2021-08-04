@@ -99,7 +99,6 @@
                     ],
                     cart_open: true,
                     cart: [],
-                    total: 0,
                 }
             },
             methods: {
@@ -113,17 +112,14 @@
                     product.stock -= 1;
                 }
             },
-            watch: {
-                cart: {
-                    handler(cart) {
-                        this.total = cart.reduce((prev, curr) => {
-                            const prev_price = prev.price || prev;
-                            const prev_quantity = prev.quantity || 1;
-                            return prev_price * prev_quantity + curr.price * curr.quantity;
-                        }, 0);
-                    },
-                    deep: true,
-                },
+            computed: {
+                total() {
+                    return this.cart.reduce((prev, curr) => {
+                        const prev_price = prev.price || prev;
+                        const prev_quantity = prev.quantity || 1;
+                        return prev_price * prev_quantity + curr.price * curr.quantity;
+                    }, 0);
+                }
             }
         });
     </script>
